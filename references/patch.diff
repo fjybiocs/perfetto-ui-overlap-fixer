@@ -1,0 +1,25 @@
+--- /Users/junyanfu/Developer/sglang-pdd/pai-mirror/.claude/skills/perfetto-trace-holes/references/original_github.py	2026-06-15 18:12:38
++++ /Users/junyanfu/Developer/sglang-pdd/pai-mirror/.claude/skills/perfetto-trace-holes/scripts/convert_to_perfetto_compatible.py	2026-06-15 18:12:38
+@@ -31,13 +31,21 @@
+     print(f"process_events start {len(events)=}")
+ 
+     last_end_time_of_pid_tid = defaultdict(lambda: -1)
++    new_tid_of_pid_tid_ts = {}
+ 
+     for e in events:
+         if e["ph"] == "X" and _is_interest_event(e):
++            orig_tid = e["tid"]
+             while e["ts"] < last_end_time_of_pid_tid[(e["pid"], e["tid"])]:
+-                e["tid"] = str(e["tid"]) + "_hack"
++                e["tid"] = str(e["tid"]) + "_pdl"
++            if e["tid"] != orig_tid:
++                new_tid_of_pid_tid_ts[(e["pid"], orig_tid, e["ts"])] = e["tid"]
+             last_end_time_of_pid_tid[(e["pid"], e["tid"])] = e["ts"] + e["dur"]
+ 
++    for e in events:
++        if e["ph"] == "f" and (e["pid"], e["tid"], e["ts"]) in new_tid_of_pid_tid_ts:
++            e["tid"] = new_tid_of_pid_tid_ts[(e["pid"], e["tid"], e["ts"])]
++
+     return events
+ 
+ 
