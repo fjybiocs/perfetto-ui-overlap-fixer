@@ -2,17 +2,7 @@
 https://zhuanlan.zhihu.com/p/2049894296543933151
 
 # skill 内容预览
-
----
-name: perfetto-trace-holes
 description: 修复 Perfetto 里 cuda-graph torch-profiler trace 同 stream kernel 之间出现的"空洞"（缺 kernel）——根因是 Hopper PDL 让相邻 kernel 执行窗重叠、Perfetto 画不下；用本工具把重叠 kernel 摊到额外行并保留 cudaGraphLaunch 箭头。看 trace 发现莫名空洞、或要判断某间隙是真 GPU 空闲还是渲染假象时用。
-allowed-tools: Bash, Read
-s_used: 0
-s_edited: 2
-s_last_used: 2026-06-15
-s_last_edited: 2026-06-15
-managed_by: agent
----
 
 # /perfetto-trace-holes —— 修复 cuda-graph trace 的 kernel "空洞"
 
